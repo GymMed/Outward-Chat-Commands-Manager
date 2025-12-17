@@ -1,0 +1,9 @@
+<ConfigOverrides>
+  <Mod GUID="gymmed.outward_game_settings">
+    <Section Name="Enchanting Modifications">
+      <Entry Key="EnchantingSuccessChance" Value="75" />
+      <Entry Key="RequireRecipeToAllowEnchant" Value="true" />
+      <Entry Key="UseRecipeOnEnchanting" Value="false" />
+    </Section>
+  </Mod>
+</ConfigOverrides>

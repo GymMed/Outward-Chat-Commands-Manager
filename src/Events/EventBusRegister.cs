@@ -10,10 +10,14 @@ namespace OutwardChatCommandsManager.Events
 {
     public static class EventBusRegister
     {
-        private static readonly (string key, Type type, string description)[] ExampleGroupParams =
+        private static readonly (string key, Type type, string description)[] CommandData =
         {
             EventRegistryParamsHelper.Get(EventRegistryParams.CommandName),
             EventRegistryParamsHelper.Get(EventRegistryParams.CommandDescription),
+            EventRegistryParamsHelper.Get(EventRegistryParams.CommandParameters),
+            EventRegistryParamsHelper.Get(EventRegistryParams.CommandAction),
+            EventRegistryParamsHelper.Get(EventRegistryParams.IsCheatCommand),
+            EventRegistryParamsHelper.Get(EventRegistryParams.CommandRequiresDebugMode),
         };
 
         public static void RegisterEvents()
@@ -22,11 +26,7 @@ namespace OutwardChatCommandsManager.Events
                 OCCM.EVENTS_LISTENER_GUID,
                 EventBusSubscriber.Event_AddCommand,
                 "Adds command to chat commands manager.",
-                EventRegistryParamsHelper.Get(EventRegistryParams.CommandName),
-                EventRegistryParamsHelper.Get(EventRegistryParams.CommandDescription),
-                EventRegistryParamsHelper.Get(EventRegistryParams.IsCheatCommand),
-                EventRegistryParamsHelper.Get(EventRegistryParams.CommandParameters),
-                EventRegistryParamsHelper.Get(EventRegistryParams.CommandAction)
+                CommandData
             );
 
             EventBus.RegisterEvent(
@@ -36,19 +36,19 @@ namespace OutwardChatCommandsManager.Events
                 EventRegistryParamsHelper.Get(EventRegistryParams.CommandName)
             );
 
-            /*
-            // Example of grouping groups and single parameters for reusable cases
             EventBus.RegisterEvent(
-                OutwardModPackTemplate.EVENTS_LISTENER_GUID,
-                EventBusSubscriber.Event_ExecuteMyCode,
-                "My code/method description",
-                EventRegistryParamsHelper.Combine(
-                    EventRegistryParamsHelper.Get(EventRegistryParams.CallerGUID),
-                    EventRegistryParamsHelper.Get(EventRegistryParams.TryEnchantMenu),
-                    ExampleGroupParams
-                )
+                OCCM.GUID,
+                EventBusPublisher.Event_AddedCommand,
+                "Fires event when comment was added to chat commands manager.",
+                CommandData
             );
-            */
+
+            EventBus.RegisterEvent(
+                OCCM.GUID,
+                EventBusPublisher.Event_RemovedCommand,
+                "Fires event when comment was removed from chat commands manager.",
+                CommandData
+            );
         }
     }
 }

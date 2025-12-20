@@ -16,6 +16,7 @@ using OutwardChatCommandsManager.Commands;
 using OutwardChatCommandsManager.Managers;
 using OutwardChatCommandsManager.Utility.Helpers;
 using OutwardChatCommandsManager.Utility.Data;
+using OutwardChatCommandsManager.Events;
 
 namespace OutwardChatCommandsManager
 {
@@ -72,6 +73,20 @@ namespace OutwardChatCommandsManager
 
             // Harmony is for patching methods. If you're not patching anything, you can comment-out or delete this line.
             new Harmony(GUID).PatchAll();
+
+            EventBusRegister.RegisterEvents();
+            EventBusSubscriber.AddSubscribers();
+
+            SL.OnSceneLoaded += () =>
+            {
+                Character first = CharacterManager.Instance.GetFirstLocalCharacter();
+                if (first != null)
+                    ChatCommandsSerializer.Instance.LoadManagerState(first);
+
+                Character second = CharacterManager.Instance.GetSecondLocalCharacter();
+                if (second != null)
+                    ChatCommandsSerializer.Instance.LoadManagerState(second);
+            };
         }
 
         // Update is called once per frame. Use this only if needed.
@@ -93,7 +108,7 @@ namespace OutwardChatCommandsManager
                 if (!CustomKeybindings.GetKeyDown(COMMAND_KEY + " " + (currentKey + 1)))
                     continue;
 
-                if(invocation != null)
+                if (invocation != null)
                 {
                     invocation.TriggerFunction();
                     continue;
@@ -156,8 +171,6 @@ namespace OutwardChatCommandsManager
                 {
                     ChatCommandsManager.Instance.AddChatCommand(command.Value);
                 }
-
-                ChatCommandsSerializer.Instance.LoadManagerState();
             }
         }
     }

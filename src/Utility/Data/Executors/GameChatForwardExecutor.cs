@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OutwardChatCommandsManager.Utility.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,8 @@ namespace OutwardChatCommandsManager.Utility.Data.Executors
         {
             _panel = panel;
         }
+
+        public CommandExecutors ExecutorType => CommandExecutors.OriginalCommand;
 
         public void Execute(ChatCommandInvocation invocation)
         {

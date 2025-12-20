@@ -16,6 +16,8 @@ namespace OutwardChatCommandsManager.Events
 
         public static void SendAddedCommand(ChatCommand chatCommand)
         {
+            OCCM.LogMessage($"Added {chatCommand.Name} command!");
+
             var payload = new EventPayload
             {
                 [EventRegistryParamsHelper.Get(EventRegistryParams.CommandName).key] = chatCommand.Name,
@@ -23,12 +25,15 @@ namespace OutwardChatCommandsManager.Events
                 [EventRegistryParamsHelper.Get(EventRegistryParams.CommandParameters).key] = chatCommand.Parameters,
                 [EventRegistryParamsHelper.Get(EventRegistryParams.CommandAction).key] = chatCommand.Function,
                 [EventRegistryParamsHelper.Get(EventRegistryParams.CommandRequiresDebugMode).key] = chatCommand.RequireDebugMode,
+                [EventRegistryParamsHelper.Get(EventRegistryParams.IsCheatCommand).key] = chatCommand.IsCheat,
             };
             EventBus.Publish(OCCM.GUID, Event_AddedCommand, payload);
         }
 
         public static void SendRemovedCommand(ChatCommand chatCommand)
         {
+            OCCM.LogMessage($"Removed {chatCommand.Name} command!");
+
             var payload = new EventPayload
             {
                 [EventRegistryParamsHelper.Get(EventRegistryParams.CommandName).key] = chatCommand.Name,
@@ -36,6 +41,7 @@ namespace OutwardChatCommandsManager.Events
                 [EventRegistryParamsHelper.Get(EventRegistryParams.CommandParameters).key] = chatCommand.Parameters,
                 [EventRegistryParamsHelper.Get(EventRegistryParams.CommandAction).key] = chatCommand.Function,
                 [EventRegistryParamsHelper.Get(EventRegistryParams.CommandRequiresDebugMode).key] = chatCommand.RequireDebugMode,
+                [EventRegistryParamsHelper.Get(EventRegistryParams.IsCheatCommand).key] = chatCommand.IsCheat,
             };
             EventBus.Publish(OCCM.GUID, Event_RemovedCommand, payload);
         }

@@ -13,7 +13,10 @@ namespace OutwardChatCommandsManager.Patches
     {
         static bool Prefix()
         {
-            ChatCommandsSerializer.Instance.AutomaticSaveManagerToXml();
+            foreach (PlayerSystem system in Global.Lobby.PlayersInLobby)
+            {
+                ChatCommandsSerializer.Instance.AutomaticSaveManagerToXml(system.ControlledCharacter);
+            }
 
             if(ChatCommandsManager.HasUsedCheat)
             {

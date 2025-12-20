@@ -45,7 +45,17 @@ namespace OutwardChatCommandsManager.Commands
             if (IsCheat)
                 ChatCommandsManager.HasUsedCheat = true;
 
-            Function?.Invoke(character, arguments);
+            try
+            {
+                Function?.Invoke(character, arguments);
+            }
+            catch(Exception ex)
+            {
+                if (string.IsNullOrEmpty(Name))
+                    OCCM.LogMessage($"ChatCommand@TriggerFunction encountered an error: \"{ex.Message}\"");
+                else
+                    OCCM.LogMessage($"Command {Name} encountered an error: \"{ex.Message}\"");
+            }
         }
     }
 }

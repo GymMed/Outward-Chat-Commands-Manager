@@ -12,11 +12,12 @@ namespace OutwardChatCommandsManager.Events
 {
     public static class EventBusSubscriber
     {
-        public const string Event_AddCommand = "ChatCommandManager@AddChatCommand";
-        public const string Event_RemoveCommand = "ChatCommandManager@RemoveChatCommand";
+        public const string Event_AddCommand = "ChatCommandsManager@AddChatCommand";
+        public const string Event_RemoveCommand = "ChatCommandsManager@RemoveChatCommand";
 
         public static void AddSubscribers()
         {
+            EventBus.Subscribe(OCCM.EVENTS_LISTENER_GUID, Event_AddCommand, AddCommand);
             EventBus.Subscribe(OCCM.EVENTS_LISTENER_GUID, Event_RemoveCommand, RemoveCommand);
         }
 
@@ -51,7 +52,10 @@ namespace OutwardChatCommandsManager.Events
             (string key, Type type, string description) isCheatParameter = EventRegistryParamsHelper.Get(EventRegistryParams.IsCheatCommand);
             bool isCheatCommand = payload.Get<bool>(isCheatParameter.key, false);
 
-            ChatCommandsManager.Instance.AddChatCommand(new ChatCommand(commandName, commandParams, description, isCheatCommand, function));
+            (string key, Type type, string description) debugParameter = EventRegistryParamsHelper.Get(EventRegistryParams.CommandRequiresDebugMode);
+            bool requiresDebug = payload.Get<bool>(debugParameter.key, false);
+
+            ChatCommandsManager.Instance.AddChatCommand(new ChatCommand(commandName, commandParams, description, isCheatCommand, function, requiresDebug));
         }
 
         public static void RemoveCommand(EventPayload payload)

@@ -1,6 +1,7 @@
 ﻿using OutwardChatCommandsManager.Commands;
 using OutwardChatCommandsManager.Utility.Data;
 using OutwardChatCommandsManager.Utility.Data.Executors;
+using OutwardChatCommandsManager.Utility.Data.Interfaces;
 using OutwardChatCommandsManager.Utility.Data.Serialization;
 using OutwardChatCommandsManager.Utility.Enums;
 using OutwardChatCommandsManager.Utility.Helpers;
@@ -23,7 +24,6 @@ namespace OutwardChatCommandsManager.Managers
         private ChatCommandsSerializer()
         {
             ConfigPath = Path.Combine(OutwardModsCommunicator.Managers.PathsManager.ConfigPath, "Chat_Commands_Manager");
-            XmlFilePath = Path.Combine(this.ConfigPath, "ChatCommandsManagerState.xml");
         }
 
         public static ChatCommandsSerializer Instance
@@ -38,10 +38,19 @@ namespace OutwardChatCommandsManager.Managers
         }
 
         public string ConfigPath { get => _configPath; set => _configPath = value; }
-        public string XmlFilePath { get => _xmlFilePath; set => _xmlFilePath = value; }
 
         private string _configPath = "";
-        private string _xmlFilePath = "";
+
+        public string GetCharacterXmlFilePath(Character character)
+        {
+            if(character?.UID == null)
+            {
+                OCCM.LogMessage("ChatCommandsSerializer@GetCharacterXmlFilePath Provided null character!");
+                return Path.Combine(this.ConfigPath, "ChatCommandsManagerState.xml");
+            }
+
+            return Path.Combine(ConfigPath, character.UID.Value, "ChatCommandsManagerState.xml");
+        }
 
         public ChatCommandsManagerStateFile Load(string path)
         {
@@ -65,12 +74,14 @@ namespace OutwardChatCommandsManager.Managers
             }
         }
 
-        public void LoadManagerState()
+        public void LoadManagerState(Character character)
         {
-            if (!File.Exists(XmlFilePath))
+            string xmlFilePath = GetCharacterXmlFilePath(character);
+
+            if (!File.Exists(xmlFilePath))
                 return;
 
-            LoadManagerState(XmlFilePath);
+            LoadManagerState(xmlFilePath);
         }
 
         public void LoadManagerState(string path)
@@ -120,12 +131,12 @@ namespace OutwardChatCommandsManager.Managers
             return state;
         }
 
-        public void AutomaticSaveManagerToXml()
+        public void AutomaticSaveManagerToXml(Character character)
         {
             //string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             //string xmlFilePath = Path.Combine(ConfigPath, "ChatCommandsManager-" + timestamp + ".xml");
 
-            SaveManagerStateToXml(XmlFilePath, GetChatManagerState());
+            SaveManagerStateToXml(GetCharacterXmlFilePath(character), GetChatManagerState());
         }
 
         public void SaveManagerStateToXml(string filePath, ChatCommandsManagerState state)
@@ -210,7 +221,16 @@ namespace OutwardChatCommandsManager.Managers
                 return false;
             }
 
-            invocation = new(character, retrievedCommand, GetArgumentsFromInvocationData(invocationData.Arguments), new ManagedCommandExecutor());
+            ICommandExecutor executor = null;
+
+            if (invocationData.Executor.HasValue)
+            {
+                executor = CommandExecutorsHelper.GetCommandExecutor(invocationData.Executor.Value, character);
+            }
+            else
+                executor = new ManagedCommandExecutor();
+
+            invocation = new(character, retrievedCommand, GetArgumentsFromInvocationData(invocationData.Arguments), executor, invocationData.Message);
             return true;
         }
 
@@ -286,7 +306,9 @@ namespace OutwardChatCommandsManager.Managers
                 //UID = invocation.UID,
                 CharacterUID = invocation.Character.UID,
                 Command = commandData,
-                Arguments = new()
+                Arguments = new(),
+                ExecutorName = invocation.Executor.ExecutorType.ToString(),
+                Message = invocation.Message,
             };
 
             foreach (var argument in invocation.Arguments)

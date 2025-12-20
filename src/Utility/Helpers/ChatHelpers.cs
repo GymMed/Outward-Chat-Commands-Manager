@@ -40,6 +40,7 @@ namespace OutwardChatCommandsManager.Utility.Helpers
                 SendChatLog(panel, command.Value.Name, ChatLogStatus.Success);
             }
 
+            SendChatLog(panel, $"Total {OriginalChatCommandsHelper.Commands.Count() + ChatCommandsManager.ChatCommands.Count()} commands. {OriginalChatCommandsHelper.Commands.Count()} original commands. {ChatCommandsManager.ChatCommands.Count()} added commands.");
             SendChatLog(panel, "For more info use:\"/help\"");
         }
 

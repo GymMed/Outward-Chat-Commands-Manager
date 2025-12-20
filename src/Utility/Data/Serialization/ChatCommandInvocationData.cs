@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OutwardChatCommandsManager.Utility.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -10,10 +11,6 @@ namespace OutwardChatCommandsManager.Utility.Data.Serialization
 {
     public class ChatCommandInvocationData
     {
-        [XmlElement("UID")]
-        [DefaultValue(null)]
-        public UID UID { get; set; } = null;
-
         [XmlElement("CharacterUID")]
         [DefaultValue(null)]
         public UID CharacterUID { get; set; } = null;
@@ -26,5 +23,20 @@ namespace OutwardChatCommandsManager.Utility.Data.Serialization
         [XmlArrayItem("Argument")]
         [DefaultValue(null)]
         public List<ArgumentData> Arguments { get; set; } = null;
+
+        [XmlElement("Message")]
+        [DefaultValue(null)]
+        public string Message { get; set; } = null;
+
+        [XmlElement("Executor")]
+        [DefaultValue(null)]
+        public string ExecutorName { get; set; } = null;
+
+        // Helper property to get enum
+        [XmlIgnore]
+        public CommandExecutors? Executor =>
+            string.IsNullOrWhiteSpace(ExecutorName)
+                ? (CommandExecutors?)null
+                : Enum.TryParse<CommandExecutors>(ExecutorName, out var e) ? e : null;
     }
 }

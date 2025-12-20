@@ -1,8 +1,8 @@
 {
-	"name": "Mod_Pack_Template",
+	"name": "Chat_Commands_Manager",
 	"version_number": "0.0.1",
-	"website_url": "https://github.com/yourGitHubName/Your-Project",
-	"description": "Change this how you like.",
+	"website_url": "https://github.com/GymMed/Outward-Chat-Commands-Manager",
+	"description": "CLI library for Outward chat. No more need to build UI to execute mod functions.",
 	"dependencies": [
 		"GymMed-Mods_Communicator-1.2.0",
 		"sinai-dev-SideLoader-3.8.4",

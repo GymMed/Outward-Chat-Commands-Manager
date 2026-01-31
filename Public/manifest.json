@@ -1,8 +1,8 @@
 {
 	"name": "Chat_Commands_Manager",
-	"version_number": "0.0.1",
+	"version_number": "0.0.2",
 	"website_url": "https://github.com/GymMed/Outward-Chat-Commands-Manager",
-	"description": "CLI library for Outward chat. No more need to build UI to execute mod functions.",
+	"description": "CLI library for Outward chat. Eliminates the need to build a separate UI to execute mod functions by providing an in-chat console.",
 	"dependencies": [
 		"GymMed-Mods_Communicator-1.2.0",
 		"sinai-dev-SideLoader-3.8.4",

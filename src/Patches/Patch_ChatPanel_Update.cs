@@ -18,6 +18,8 @@ namespace OutwardChatCommandsManager.Patches
         private static readonly ConditionalWeakTable<ChatPanel, ChatPanelHistoryState> _state
             = new();
 
+        public static ConditionalWeakTable<ChatPanel, ChatPanelHistoryState> State => _state;
+
         static void Postfix(ChatPanel __instance)
         {
             if (__instance.m_chatEntry == null)
@@ -26,7 +28,7 @@ namespace OutwardChatCommandsManager.Patches
             if (!__instance.m_chatEntry.isFocused)
                 return;
 
-            var state = _state.GetOrCreateValue(__instance);
+            var state = State.GetOrCreateValue(__instance);
             var input = __instance.m_chatEntry;
 
             if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -112,7 +114,7 @@ namespace OutwardChatCommandsManager.Patches
             PlayErrorSound();
         }
 
-        static void ExitHistoryMode(ChatPanelHistoryState state)
+        public static void ExitHistoryMode(ChatPanelHistoryState state)
         {
             state.HistoryIndex = -1;
             state.CachedLiveInput = null;

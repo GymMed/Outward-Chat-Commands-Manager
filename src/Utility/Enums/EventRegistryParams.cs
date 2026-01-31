@@ -24,7 +24,7 @@ namespace OutwardChatCommandsManager.Utility.Enums
                 [EventRegistryParams.CommandName] = ("command", typeof(string), "Required. The text players type in chat (e.g. \"/command\") to trigger your handler."),
                 [EventRegistryParams.CommandParameters] = ("parameters", typeof(Dictionary<string, (string, string)>), "Optional. Parameters with name and (description, default value) provided as dictionary."),
                 [EventRegistryParams.CommandAction] = ("function", typeof(Action<Character, Dictionary<string, string>>), "Required. The method to execute when the command is triggered. Character is the command caller and Dictionary stores parameter and argument(value)."),
-                [EventRegistryParams.IsCheatCommand] = ("isCheatCommand", typeof(bool), "Optional. Default false. Determines if player game will be saved after triggering your command."),
+                [EventRegistryParams.IsCheatCommand] = ("isCheatCommand", typeof(bool), "Optional. Default false. Determines if player game can be saved after triggering your command."),
                 [EventRegistryParams.CommandDescription] = ("description", typeof(string), "Optional. Default null. Provides description of command for users."),
                 [EventRegistryParams.CommandRequiresDebugMode] = ("debugMode", typeof(bool), "Optional. Default false. Determines if command requires debug mode to work."),
             };

@@ -402,52 +402,83 @@ namespace OutwardChatCommandsManager.Utility.Helpers
         public static List<string> GetArgumentsFromMessage(string message)
         {
             List<string> tokens = Tokenize(message);
+#if DEBUG
+            OCCM.LogMessage($"[DEBUG] All tokens: [{string.Join(", ", tokens.Select(t => $"\"{t}\""))}]");
+#endif
 
             //string commandName = tokens[0];
             List<string> arguments = tokens.Skip(1).ToList();
+#if DEBUG
+            OCCM.LogMessage($"[DEBUG] Arguments after Skip(1): [{string.Join(", ", arguments.Select(t => $"\"{t}\""))}]");
+#endif
 
             return arguments;
         }
 
         public static Dictionary<string, string> GetArguments(List<string> arguments, Dictionary<string, (string description, string defaultValue)> parameters)
         {
+#if DEBUG
+            OCCM.LogMessage($"[DEBUG] GetArguments received: [{string.Join(", ", arguments.Select(t => $"\"{t}\""))}]");
+            OCCM.LogMessage($"[DEBUG] Parameters: [{string.Join(", ", parameters.Keys)}]");
+#endif
+
             Dictionary<string, string> mappedArguments = new();
             List<string> leftoverArgs = new(arguments);
-            Dictionary<string, (string desc, string def)> paramDefs = new(parameters);
-
+            
             // --- 1) Parse named arguments: --param=value
             for (int i = leftoverArgs.Count - 1; i >= 0; i--)
             {
                 string arg = leftoverArgs[i];
-
                 if (arg.StartsWith("--") && arg.Contains("="))
                 {
                     int eqIndex = arg.IndexOf('=');
-
                     string key = arg.Substring(2, eqIndex - 2);       // extract key without "--"
                     string value = arg.Substring(eqIndex + 1);         // extract value without "="
-
                     mappedArguments[key] = value;
-
                     leftoverArgs.RemoveAt(i);
-                    paramDefs.Remove(key);
+
+#if DEBUG
+                    OCCM.LogMessage($"[DEBUG] After named args, leftover: [{string.Join(", ", leftoverArgs.Select(a => $"\"{a}\""))}]");
+                    OCCM.LogMessage($"[DEBUG] Mapped so far: {string.Join(", ", mappedArguments.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
+#endif
                 }
             }
-
-            // --- 2) Assign positional arguments (remaining)
+            
+            // --- 2) Assign positional arguments (remaining) in original parameter order
             int pos = 0;
-            foreach (var kvp in paramDefs)
+            foreach (var kvp in parameters)  // Use original parameters, not paramDefs
             {
                 string key = kvp.Key;
 
+#if DEBUG
+                OCCM.LogMessage($"[DEBUG] Processing parameter '{key}', already mapped: {mappedArguments.ContainsKey(key)}");
+#endif
+                
+                // Skip if already assigned via named argument
+                if (mappedArguments.ContainsKey(key))
+                    continue;
+                    
+                // Assign from leftover positional args or use default
                 if (pos < leftoverArgs.Count)
+                {
+#if DEBUG
+                    OCCM.LogMessage($"[DEBUG] Assigning positional arg '{leftoverArgs[pos]}' to '{key}'");
+#endif
                     mappedArguments[key] = leftoverArgs[pos];
+                    pos++;
+                }
                 else
-                    mappedArguments[key] = kvp.Value.def; // use default if no more args
-
-                pos++;
+                {
+#if DEBUG
+                    OCCM.LogMessage($"[DEBUG] Using default value '{kvp.Value.defaultValue}' for '{key}'");
+#endif
+                    mappedArguments[key] = kvp.Value.defaultValue; // use default if no more args
+                }
             }
-
+#if DEBUG
+            OCCM.LogMessage($"[DEBUG] Final mapping: {string.Join(", ", mappedArguments.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
+#endif
+            
             return mappedArguments;
         }
     }

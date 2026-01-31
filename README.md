@@ -255,7 +255,7 @@ public static void RemovedCommand(EventPayload payload)
             <td>function</td> <td>Action &lt;Character, Dictionary&lt;string, string&gt;&gt;</td> <td>Required. The method to execute when the command is triggered. Character is the command caller and Dictionary stores parameter and argument(value).</td>
         </tr>
         <tr>
-            <td>isCheatCommand</td> <td>bool</td> <td>Optional. Default false. Determines if player game will be saved after triggering your command.</td>
+            <td>isCheatCommand</td> <td>bool</td> <td>Optional. Default false. Determines if player game can be saved after triggering your command.</td>
         </tr>
         <tr>
             <td>description</td> <td>string</td> <td>Optional. Default null. Provides description of command for users.</td>

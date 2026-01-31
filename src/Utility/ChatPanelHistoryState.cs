@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OutwardChatCommandsManager.Utility
 {
-    class ChatPanelHistoryState
+    public class ChatPanelHistoryState
     {
         public int HistoryIndex = -1;
         public string CachedLiveInput;

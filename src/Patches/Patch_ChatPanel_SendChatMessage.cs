@@ -49,6 +49,9 @@ namespace OutwardChatCommandsManager.Patches
                 return;
             }
 
+            var state = Patch_ChatPanel_Update.State.GetOrCreateValue(__instance);
+            Patch_ChatPanel_Update.ExitHistoryMode(state);
+
             __instance.m_chatEntry.text = "";
 
             if (!__instance.m_chatEntry.isFocused)

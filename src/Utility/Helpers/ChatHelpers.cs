@@ -238,6 +238,12 @@ namespace OutwardChatCommandsManager.Utility.Helpers
 
         public static void ChatLogChatCommandParameters(ChatPanel panel, IChatCommand chatCommand)
         {
+            if (chatCommand?.Parameters == null)
+            {
+                SendChatLog(panel, $"Doesn't have any parameters", ChatLogStatus.Success);
+                return;
+            }
+
             foreach(KeyValuePair<string, (string, string)> parameter in chatCommand.Parameters)
             {
                 string value = string.IsNullOrEmpty(parameter.Value.Item2) ? "null" : parameter.Value.Item2;
@@ -290,10 +296,12 @@ namespace OutwardChatCommandsManager.Utility.Helpers
                 if(matchCommand.RequireDebugMode && !Global.CheatsEnabled)
                     return false;
 
-                if(messageCommand.Arguments.Count > matchCommand.Parameters.Count)
+                int maxArgs = matchCommand.Parameters?.Count ?? 0;
+
+                if (messageCommand.Arguments.Count > maxArgs)
                 {
-                    OCCM.LogMessage($"Command {matchCommand.Name} retrieved too many arguments from user.");
-                    return false;
+                    OCCM.LogMessage($"Command {matchCommand.Name} retrieved more arguments from user than registered parameters.");
+                    //return false;
                 }
 
                 command = matchCommand;
@@ -421,6 +429,8 @@ namespace OutwardChatCommandsManager.Utility.Helpers
             OCCM.LogMessage($"[DEBUG] GetArguments received: [{string.Join(", ", arguments.Select(t => $"\"{t}\""))}]");
             OCCM.LogMessage($"[DEBUG] Parameters: [{string.Join(", ", parameters.Keys)}]");
 #endif
+            if (parameters == null)
+                parameters = new Dictionary<string, (string, string)>();
 
             Dictionary<string, string> mappedArguments = new();
             List<string> leftoverArgs = new(arguments);

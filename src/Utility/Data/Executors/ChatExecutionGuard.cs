@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +10,8 @@ namespace OutwardChatCommandsManager.Utility.Data.Executors
     {
         [ThreadStatic]
         public static bool IsForwarding;
+
+        public static bool IsProcessingCommand = false;
+        public static float CommandStartTime = 0f;
     }
 }

@@ -491,5 +491,52 @@ namespace OutwardChatCommandsManager.Utility.Helpers
             
             return mappedArguments;
         }
+
+        public static void SetAutoMaxChatSize(Character character, Dictionary<string, string> arguments)
+        {
+            ChatPanel panel = character?.CharacterUI?.ChatPanel;
+
+            if(panel == null)
+            {
+                OCCM.LogMessage("ChatHelpers@SetAutoMaxChatSize Tried to use missing chatPanel.");
+                return;
+            }
+
+            arguments.TryGetValue("action", out string action);
+
+            if(string.IsNullOrWhiteSpace(action) || string.Equals(action, "show", StringComparison.OrdinalIgnoreCase))
+            {
+                string status = ChatAutoExpandManager.IsEnabled ? "enabled" : "disabled";
+                int currentMax = panel.MaxMessageCount == int.MaxValue 
+                    ? ChatAutoExpandManager.GetDefaultMaxMessages() 
+                    : panel.MaxMessageCount;
+                SendChatLog(panel, $"AutoMaxChatSize is {status}. Current default max: {currentMax} messages.", ChatLogStatus.Info);
+                return;
+            }
+
+            if(string.Equals(action, "on", StringComparison.OrdinalIgnoreCase))
+            {
+                ChatAutoExpandManager.Enable();
+                SendChatLog(panel, $"AutoMaxChatSize enabled. System messages will not be auto-removed.", ChatLogStatus.Success);
+                return;
+            }
+
+            if(string.Equals(action, "off", StringComparison.OrdinalIgnoreCase))
+            {
+                ChatAutoExpandManager.Disable();
+                SendChatLog(panel, $"AutoMaxChatSize disabled. Chat will behave normally.", ChatLogStatus.Warning);
+                return;
+            }
+
+            if(string.Equals(action, "toggle", StringComparison.OrdinalIgnoreCase))
+            {
+                ChatAutoExpandManager.Toggle();
+                string status = ChatAutoExpandManager.IsEnabled ? "enabled" : "disabled";
+                SendChatLog(panel, $"AutoMaxChatSize toggled to {status}.", ChatLogStatus.Info);
+                return;
+            }
+
+            SendChatLog(panel, $"Unknown action '{action}'. Use 'on', 'off', 'toggle', or 'show'.", ChatLogStatus.Error);
+        }
     }
 }

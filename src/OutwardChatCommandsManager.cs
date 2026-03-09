@@ -30,7 +30,7 @@ namespace OutwardChatCommandsManager
         // Choose a NAME for your project, generally the same as your Assembly Name.
         public const string NAME = "Chat Commands Manager";
         // Increment the VERSION when you release a new version of your mod.
-        public const string VERSION = "0.0.3";
+        public const string VERSION = "0.1.0";
 
         // Choose prefix for log messages for quicker search and readablity
         public static string prefix = "[Chat-Commands-Manager]";

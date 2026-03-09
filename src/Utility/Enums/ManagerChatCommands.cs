@@ -15,6 +15,7 @@ namespace OutwardChatCommandsManager.Utility.Enums
         LockKey,
         ReleaseKey,
         ShowCommandsHistory,
+        AutoMaxChatSize,
     }
 
     public static class ManagerChatCommandsHelper
@@ -50,6 +51,12 @@ namespace OutwardChatCommandsManager.Utility.Enums
                         ("Optional. Provides commands with arguments used example \"/history detailed\".", "") 
                     },
                 }, "Show used commands history. Ex.:\"/history\".", false, (Character character, Dictionary<string, string> parameters) => { ChatHelpers.ShowCommandsHistory(character, parameters); } )
+            },
+            { ManagerChatCommands.AutoMaxChatSize, new ChatCommand("autoMaxChatSize", new() {
+                    {"action", 
+                        ("Optional. Can be 'on', 'off', 'toggle', or 'show'. Default: 'show'.", "show") 
+                    },
+                }, "Automatically expands chat history during command output. System messages kept, user messages restore limit. Default: on. Timer resets after 3 seconds of no system messages.", false, (Character character, Dictionary<string, string> parameters) => { ChatHelpers.SetAutoMaxChatSize(character, parameters); } )
             },
         };
     }

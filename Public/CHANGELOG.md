@@ -1,5 +1,13 @@
 ## Changelog
 
+### Release 0.1.0 Version
+
+#### Added
+
+-   Added <code>/autoMaxChatSize</code> command that allows the currently typed
+    command to send system messages to chat without being deleted when the
+    maximum chat message limit is reached.
+
 ### Release 0.0.3 Version
 
 #### Fixed

@@ -25,6 +25,11 @@ namespace OutwardChatCommandsManager.Patches
             if (!ChatHelpers.TryGetValidCommand(__instance.m_chatEntry.text, out IChatCommand command))
                 return true;
 
+            ChatExecutionGuard.IsProcessingCommand = true;
+            ChatExecutionGuard.CommandStartTime = UnityEngine.Time.time;
+            ChatAutoExpandManager.StoreOriginalAtCommandStart(__instance);
+            ChatAutoExpandManager.CleanupBeforeNewCommand(__instance);
+
             ChatCommandInvocation invocation = null;
 
             if (command is OriginalChatCommand originalCommand)

@@ -269,6 +269,7 @@ public static void RemovedCommand(EventPayload payload)
 
 ## Can I find full project example how to use this?
 
+You can view mod creation [template here](https://github.com/GymMed/Outward-Chat-Commands-Template).<br>
 You can view [outward basic chat commands mod here](https://github.com/GymMed/Outward-Basic-Chat-Commands).
 
 ## How to set up

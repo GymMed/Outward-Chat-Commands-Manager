@@ -1,5 +1,14 @@
 ## Changelog
 
+### Release 0.0.3 Version
+
+#### Fixed
+
+-   Fixed missing optional parameters variable in event payload. Now it is
+    not required.
+-   Fixed dynamic size of parameters variable in event payload. Now you can
+    send more arguments, when parameters defined.
+
 ### Release 0.0.2 Version
 
 #### Fixed
